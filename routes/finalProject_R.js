@@ -15,20 +15,23 @@ const storage =multer.diskStorage({
         cb(null,'images/');
     },
     filename: (req,file,cb)=>{
-        let id =req.params.id ? req.params.id : nextId;
+        let id =req.params.id ? req.params.id : nextID;
         let finalFileName= `${id}${path.extname(file.originalname)}`;
         cb(null,finalFileName);
     }
 });
+const upload = multer({storage: storage});
 
 router.get('/', (req, res) => {
     res.json(project);
 })
 
-router.post('/', (req, res) => {
+router.post('/',upload.single('myFile'), (req, res) => {
     let id = req.body.id;
     let name = req.body.name;
-    let project = {id,name};
+    let description = req.body.description;
+    let myFileName = req.file ? req.file.filename : null;
+    let project = {id,name,description,myFileName};
     project[id] = project;
     res.json({message:"ok"});
 })
