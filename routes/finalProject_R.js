@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-let project = [];
+let projects = [];
 let nextID = 1;
 
 if(!fs.existsSync('images')){
@@ -32,8 +32,23 @@ router.post('/',upload.single('myFile'), (req, res) => {
     let description = req.body.description;
     let myFileName = req.file ? req.file.filename : null;
     let project = {id,name,description,myFileName};
-    project[id] = project;
+    projects[id] = project;
     res.json({message:"ok"});
+})
+
+router.delete('/:id', (req, res) => {
+    let id = Number(req.params.id);
+    if (isNaN(id)){
+        return res.json({massege: "לא חוקי"});
+    }
+    let project = projects[id];
+    if(!project){
+        return res.json("לא קיים");
+    }
+    projects[id] = null;
+    if(!fs.existsSync(path.join('images',project.myFileName))){
+        fs.unlinkSync(path.join('images',project.myFileName));
+    }
 })
 
 module.exports = router;
