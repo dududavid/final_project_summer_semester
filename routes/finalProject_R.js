@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
+const multer =require('multer');
 const path = require('path');
 const fs = require('fs');
 
 let projects = [];
-let nextID = 1;
+let nextID =1;
 
 if(!fs.existsSync('images')){
     fs.mkdirSync('images');
@@ -22,33 +22,39 @@ const storage =multer.diskStorage({
 });
 const upload = multer({storage: storage});
 
-router.get('/', (req, res) => {
-    res.json(project);
-})
+router.get('/',(req,res)=>{
+    res.json(projects);
+});
 
-router.post('/',upload.single('myFile'), (req, res) => {
-    let id = req.body.id;
+router.post('/',upload.single('myFile'),(req,res)=>{
     let name = req.body.name;
-    let description = req.body.description;
+    let id = nextID++;
+    let description=req.body.description;
     let myFileName = req.file ? req.file.filename : null;
     let project = {id,name,description,myFileName};
-    projects[id] = project;
-    res.json({message:"ok"});
-})
+    projects.push(project);
+    res.json({massege:"ok"});
 
-router.delete('/:id', (req, res) => {
+});
+router.delete('/:id',(req,res)=>{
     let id = Number(req.params.id);
-    if (isNaN(id)){
-        return res.json({massege: "לא חוקי"});
+    if(isNaN(id)){
+        return res.json({massege:"לא חוקי"})
     }
-    let project = projects[id];
-    if(!project){
+    let index = projects.findIndex(p => p.id === id);
+    if (index === -1) {
         return res.json("לא קיים");
     }
-    projects[id] = null;
-    if(!fs.existsSync(path.join('images',project.myFileName))){
-        fs.unlinkSync(path.join('images',project.myFileName));
+    let project = projects[index];
+    projects.splice(index, 1);
+    if (project.myFileName && fs.existsSync(path.join('images', project.myFileName))) {
+        fs.unlinkSync(path.join('images', project.myFileName));
     }
-})
+    res.json({ message: "נמחק בהצלחה" });
+});
 
-module.exports = router;
+
+
+
+
+module.exports =router;
