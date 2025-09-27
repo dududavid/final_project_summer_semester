@@ -129,7 +129,14 @@ async function editProject(id) {
     }
 }
 
-
+function addOrEdit() {
+    let id = document.getElementById("id").value;
+    if (id) {
+        editProject(id);
+    } else {
+        addProject();
+    }
+}
 
 
 
