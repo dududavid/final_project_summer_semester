@@ -82,7 +82,7 @@ function clearInput() {
 async function deleteProject(id) {
     try {
         if (confirm("האם אתה בטוח?")) {
-            await fetch(/p/${id}, {
+            await fetch(`/p/${id}`, {
                 method: "DELETE",
             });
             getData();
@@ -92,7 +92,20 @@ async function deleteProject(id) {
     }
 }
 
-
+async function getById(id) {
+    try {
+        let response = await fetch(`/p/${id}`);
+        let obj = await response.json();
+        document.getElementById("id").value = obj.id;
+        document.getElementById("name").value = obj.name;
+        document.getElementById("description").value = obj.description;
+        if (document.getElementById("myImage")) {
+            document.getElementById("myImage").src = "../images/" + obj.myFileName;
+        }
+    } catch (err) {
+        alert(err);
+    }
+}
 
 
 
