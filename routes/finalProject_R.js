@@ -85,6 +85,27 @@ router.patch('/:id', upload.single('myFile'), (req, res) => {
     res.json({ message: "עודכן בהצלחה", project });
 });
 
+router.post('/:id/vote', (req, res) => {
+    let id = Number(req.params.id);
+    let userId = req.body.userId;
+
+    if (isNaN(id) || !userId) {
+        return res.json({ message: "פרויקט או משתמש לא חוקיים" });
+    }
+
+    let project = projects.find(p => p.id === id);
+    if (!project) return res.json({ message: "פרויקט לא נמצא" });
+
+    if (project.voters.includes(userId)) {
+        return res.json({ message: "כבר הצבעת על פרויקט זה", votes: project.votes });
+    }
+
+    project.votes++;
+    project.voters.push(userId);
+
+    res.json({ message: "הצבעת בהצלחה", votes: project.votes });
+});
+
 
 
 module.exports =router;
