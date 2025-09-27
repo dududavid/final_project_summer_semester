@@ -69,4 +69,16 @@ async function addProject() {
     }
 }
 
+function clearInput() {
+    document.getElementById("id").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("myFile").value = "";
+    if (document.getElementById("myImage")) {
+        document.getElementById("myImage").src = "";
+    }
+}
+
+
+
 addTitle();
