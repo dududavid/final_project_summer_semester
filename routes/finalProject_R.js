@@ -48,15 +48,12 @@ router.post('/', (req, res, next) => {req.newId = nextID++;
     res.json({ message: "ok", project });
 });
 
-router.delete('/:id',(req,res)=>{
+
+router.delete('/:id', (req, res) => {
     let id = Number(req.params.id);
-    if(isNaN(id)){
-        return res.json({massege:"לא חוקי"})
-    }
+    if (isNaN(id)) return res.json({ message: "לא חוקי" });
     let index = projects.findIndex(p => p.id === id);
-    if (index === -1) {
-        return res.json("לא קיים");
-    }
+    if (index === -1) return res.json("לא קיים");
     let project = projects[index];
     projects.splice(index, 1);
     if (project.myFileName && fs.existsSync(path.join('images', project.myFileName))) {
@@ -65,7 +62,28 @@ router.delete('/:id',(req,res)=>{
     res.json({ message: "נמחק בהצלחה" });
 });
 
+router.patch('/:id', upload.single('myFile'), (req, res) => {
+    let id = Number(req.params.id);
+    if (isNaN(id)) return res.json({ message: "מזהה לא חוקי" });
 
+    let project = projects.find(p => p.id === id);
+    if (!project) return res.json({ message: "פרויקט לא קיים" });
+
+    let oldFileName = project.myFileName;
+    let newFileName = req.file ? req.file.filename : null;
+
+    if (oldFileName && newFileName && newFileName !== oldFileName) {
+        if (fs.existsSync(path.join('images', oldFileName))) {
+            fs.unlinkSync(path.join('images', oldFileName));
+        }
+        project.myFileName = newFileName;
+    }
+
+    if (req.body.name) project.name = req.body.name;
+    if (req.body.description) project.description = req.body.description;
+
+    res.json({ message: "עודכן בהצלחה", project });
+});
 
 
 
