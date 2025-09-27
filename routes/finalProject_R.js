@@ -33,16 +33,21 @@ router.get('/:id', (req, res) => {
     res.json(project);
 });
 
-router.post('/',upload.single('myFile'),(req,res)=>{
+router.post('/', (req, res, next) => {req.newId = nextID++;
+    next();
+},
+    upload.single('myFile'), (req, res) => {
+    let id = req.newId;
     let name = req.body.name;
-    let id = nextID++;
-    let description=req.body.description;
+    let description = req.body.description;
     let myFileName = req.file ? req.file.filename : null;
-    let project = {id,name,description,myFileName};
-    projects.push(project);
-    res.json({massege:"ok"});
 
+    let project = { id, name, description, myFileName, votes: 0, voters: [] };
+    projects.push(project);
+
+    res.json({ message: "ok", project });
 });
+
 router.delete('/:id',(req,res)=>{
     let id = Number(req.params.id);
     if(isNaN(id)){
