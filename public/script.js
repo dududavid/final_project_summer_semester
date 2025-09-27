@@ -60,7 +60,7 @@ async function addProject() {
         clearInput();
 
         if (data.project && data.project.id) {
-            window.location.href = `project.html ? id = ${data.project.id}`;
+            window.location.href = `project.html?id=${data.project.id}`;
         } else {
             getData();
         }
@@ -138,6 +138,15 @@ function addOrEdit() {
     }
 }
 
+function initProjects() {
+    if (!localStorage.getItem("votedProjects")) {
+        localStorage.setItem("votedProjects", JSON.stringify([]));
+    }
+    if (!localStorage.getItem("userId")) {
+        localStorage.setItem("userId", Date.now().toString());
+    }
+}
+
 function vote(id) {
     let userId = localStorage.getItem("userId");
     if (!userId) {
@@ -162,7 +171,10 @@ function vote(id) {
         });
 }
 
+function openProject(id) {
+    window.location.href = `project.html?id=${id}`;
+}
 
-
+initProjects();
 getData();
 addTitle();

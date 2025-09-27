@@ -7,6 +7,17 @@ const fs = require('fs');
 let projects = [];
 let nextID =1;
 
+function initProjects() {
+    if (projects.length === 0) {
+        projects.push(
+            { id: nextID++, name: "Fitness Tracker", description: "מערכת מעקב אימונים אישית", myFileName: "2.jpg", votes: 0, voters: [] },
+            { id: nextID++, name: "Weather App", description: "אפליקציית מזג אוויר פשוטה", myFileName: "3.jpg", votes: 0, voters: [] },
+            { id: nextID++, name: "Memory Game", description: "משחק זיכרון בסיסי", myFileName: "5.jpg", votes: 0, voters: [] }
+        );
+    }
+}
+initProjects();
+
 if(!fs.existsSync('images')){
     fs.mkdirSync('images');
 }
