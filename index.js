@@ -4,7 +4,7 @@ const port = 4852;
 
 app.use(express.static(__dirname));
 app.use(express.json());
-
+app.use('/images', express.static('images'));
 app.get('/',(req,res)=>{
     res.sendFile(__dirname+'/public/index.html')
 })
