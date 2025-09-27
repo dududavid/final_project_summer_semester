@@ -38,4 +38,35 @@ function createGrid(data) {
     document.getElementById("main").innerHTML = txt;
 }
 
+async function addProject() {
+    try {
+        let name = document.getElementById("name").value;
+        let description = document.getElementById("description").value;
+        let myFile = document.getElementById("myFile").files[0];
+
+        let formData = new FormData();
+        formData.append("name", name);
+        formData.append("description", description);
+        if (myFile) {
+            formData.append("myFile", myFile);
+        }
+
+        let response = await fetch("/p", {
+            method: "POST",
+            body: formData,
+        });
+        let data = await response.json();
+
+        clearInput();
+
+        if (data.project && data.project.id) {
+            window.location.href = `project.html ? id = ${data.project.id}`;
+        } else {
+            getData();
+        }
+    } catch (err) {
+        alert(err);
+    }
+}
+
 addTitle();
