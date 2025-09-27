@@ -144,7 +144,24 @@ function vote(id) {
         userId = Date.now().toString();
         localStorage.setItem("userId", userId);
     }
+    fetch(`/p/${id}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+    })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+
+            let voted = JSON.parse(localStorage.getItem("votedProjects")) || [];
+            if (!voted.includes(id)) {
+                voted.push(id);
+                localStorage.setItem("votedProjects", JSON.stringify(voted));
+            }
+            getData();
+        });
 }
+
 
 
 getData();
