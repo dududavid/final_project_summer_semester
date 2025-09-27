@@ -138,6 +138,14 @@ function addOrEdit() {
     }
 }
 
+function vote(id) {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+        userId = Date.now().toString();
+        localStorage.setItem("userId", userId);
+    }
+}
 
 
+getData();
 addTitle();
