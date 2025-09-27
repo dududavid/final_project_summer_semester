@@ -26,6 +26,13 @@ router.get('/',(req,res)=>{
     res.json(projects);
 });
 
+router.get('/:id', (req, res) => {
+    let id = Number(req.params.id);
+    let project = projects.find(p => p.id === id);
+    if (!project) return res.status(404).json({ message: "פרויקט לא נמצא" });
+    res.json(project);
+});
+
 router.post('/',upload.single('myFile'),(req,res)=>{
     let name = req.body.name;
     let id = nextID++;
