@@ -107,7 +107,27 @@ async function getById(id) {
     }
 }
 
-
+async function editProject(id) {
+    try {
+        let name = document.getElementById("name").value;
+        let description = document.getElementById("description").value;
+        let myFile = document.getElementById("myFile").files[0];
+        let formData = new FormData();
+        formData.append("name", name);
+        formData.append("description", description);
+        if (myFile) {
+            formData.append("myFile", myFile);
+        }
+        await fetch(`/p/${id}`, {
+            method: "PATCH",
+                body: formData,
+        });
+        getData();
+        clearInput();
+    } catch (err) {
+        alert(err);
+    }
+}
 
 
 
