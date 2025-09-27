@@ -79,6 +79,24 @@ function clearInput() {
     }
 }
 
+async function deleteProject(id) {
+    try {
+        if (confirm("האם אתה בטוח?")) {
+            await fetch(/p/${id}, {
+                method: "DELETE",
+            });
+            getData();
+        }
+    } catch (err) {
+        alert(err);
+    }
+}
+
+
+
+
+
+
 
 
 addTitle();
