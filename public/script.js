@@ -14,12 +14,9 @@ async function getData() {
 }
 
 function createGrid(data) {
-    let voted = JSON.parse(localStorage.getItem("votedProjects")) || [];
-    voted = voted.map(Number);
     let txt = "";
     for (let obj of data) {
         if (obj) {
-            let disabled = voted.includes(obj.id)?"disabled":"";
             txt += `
       <div class="card">
         <div onclick="openProject(${obj.id})" style="cursor:pointer">
