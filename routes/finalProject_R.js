@@ -98,21 +98,24 @@ router.patch('/:id', upload.single('myFile'), (req, res) => {
 
 router.post('/:id/vote', (req, res) => {
     let id = Number(req.params.id);
-    let userId = req.body.userId;
-
-    if (isNaN(id) || !userId) {
-        return res.json({ message: "פרויקט או משתמש לא חוקיים" });
+    if (isNaN(id)) {
+        return res.json({ message: "מזהה פרויקט לא חוקי" });
     }
 
     let project = projects.find(p => p.id === id);
     if (!project) return res.json({ message: "פרויקט לא נמצא" });
 
-    if (project.voters.includes(userId)) {
+
+    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+
+    if (project.voters.includes(ip)) {
         return res.json({ message: "כבר הצבעת על פרויקט זה", votes: project.votes });
     }
 
+
     project.votes++;
-    project.voters.push(userId);
+    project.voters.push(ip);
 
     res.json({ message: "הצבעת בהצלחה", votes: project.votes });
 });

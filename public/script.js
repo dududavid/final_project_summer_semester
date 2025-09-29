@@ -19,7 +19,7 @@ function createGrid(data) {
     let txt = "";
     for (let obj of data) {
         if (obj) {
-            let disabled = voted.includes(obj.id) ? "disabled" : "";
+            let disabled = voted.includes(obj.id)?"disabled":"";
             txt += `
       <div class="card">
         <div onclick="openProject(${obj.id})" style="cursor:pointer">
@@ -30,7 +30,7 @@ function createGrid(data) {
         <div>
              <button onClick="deleteProject(${obj.id})">Delete</button>
              <button onClick="getById(${obj.id})">Edit</button>
-             <button onClick="vote(${obj.id})" ${disabled}>👍 הצבע (${obj.votes || 0})</button>
+             <button onClick="vote(${obj.id})">👍 vote (${obj.votes || 0})</button>
         </div>
       </div>`;
         }
@@ -148,32 +148,27 @@ function initProjects() {
 }
 
 function vote(id) {
-    let userId = localStorage.getItem("userId");
-    if (!userId) {
-        userId = Date.now().toString();
-        localStorage.setItem("userId", userId);
-    }
     fetch(`/p/${id}/vote`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+    method: "POST",
+})
+.then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        getData();
     })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-
-            let voted = JSON.parse(localStorage.getItem("votedProjects")) || [];
-            if (!voted.includes(id)) {
-                voted.push(id);
-                localStorage.setItem("votedProjects", JSON.stringify(voted));
-            }
-            getData();
-        });
+    .catch(err => {
+        alert("שגיאה בהצבעה: " + err);
+    });
 }
 
 function openProject(id) {
     window.location.href = `project.html?id=${id}`;
 }
+
+function openProject(id) {
+    window.location.href = `project.html?id=${id}`;
+}
+
 
 initProjects();
 getData();
